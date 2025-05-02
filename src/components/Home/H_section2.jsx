@@ -3,6 +3,7 @@ import man from "./../../assets/man.jpg";
 import women from "./../../assets/women.jpg";
 import { useEffect, useState } from "react";
 import { Button } from "@mui/material";
+import { HoverEffect } from "../ui/card-hover-effect";
 
 function H_section2() {
   const [dataa, setdataa] = useState([
@@ -11,46 +12,38 @@ function H_section2() {
     "Man",
     "Women",
   ]);
+
   useEffect(() => {
     fetch("https://fakestoreapi.com/products/categories")
-      .then((res) => {
-        return res.json();
-      })
-      .then((data) => {
-        setdataa(data);
-      });
+      .then((res) => res.json())
+      .then((data) => setdataa(data));
   }, []);
+
+  const hoverItems = dataa.map((data, index) => {
+    const route =
+      data === "men's clothing"
+        ? "/Products/Men"
+        : data === "women's clothing"
+        ? "/Products/Women"
+        : `/Products/${data}`;
+    const image =
+      data === "men's clothing" || data === "Man" ? man : women;
+
+    return {
+      title: data,
+      image: image,
+      link: route,
+    };
+  });
 
   return (
     <div
       id="section2"
-      className="bg-primary flex flex-col gap-[50px] items-center justify-center text-white p-[50px]"
+      className="bg-primary flex flex-col items-center justify-center text-white p-[50px]"
     >
-      <div className="text-[30px] md:text-[40px] ">Our collection</div>
-      <div className="flex w-[100%] justify-evenly flex-wrap">
-
-        {dataa?.map((data, index) => (
-          <Link
-            key={index}
-            to={
-              data === "men's clothing"
-                ? "/Products/Men"
-                : data === "women's clothing"
-                ? "/Products/Women"
-                : `/Products/${data}`
-            }
-          >
-            <div className="max-w-[200px]  pb-[20px] flex flex-col items-center gap-[10px] ">
-              <div className="w-[100%] rounded-[10px] overflow-hidden">
-                <img src={man} alt="image" />
-              </div>
-              <div>
-                <h2>{data}</h2>
-              </div>
-            </div>
-          </Link>
-        ))}
-      </div>
+      <div className="text-[30px] md:text-[40px]">Our collection</div>
+      
+      <HoverEffect items={hoverItems} />
 
       <Link to={"/Products/AllProducts"}>
         <Button color="inherit">See All Products</Button>
