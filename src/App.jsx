@@ -29,7 +29,7 @@ useEffect(()=>{
 },[])
   return (
    
-      <BrowserRouter basename='E-commerce-page'>
+      <BrowserRouter basename='CodeCommerce'>
         <div className="mx-auto">
           <Header />
           <Routes >

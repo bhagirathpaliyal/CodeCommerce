@@ -1,4 +1,4 @@
-# E-Commerce Page
+# CodeCommerce
 
 This is a modern e-commerce web application built using **React.js**, **Redux**, **Tailwind CSS**, **Material-UI (MUI)**, and **Firebase**. The application showcases a basic e-commerce experience with functionalities like product listing, user authentication, and a shopping cart.
 
