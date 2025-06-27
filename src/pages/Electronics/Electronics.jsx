@@ -1,34 +1,48 @@
-
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import Footer from "../../components/Footer/Footer";
 import Item from "../../components/Item";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchProduct } from "../../store/feature/productSlice";
+import ItemSkeleton from "../../components/ItemSkeleton";
 
-function Electronics(){
-
-  const [product, setProduct] = useState([]);
+function Electronics() {
+  const dispatch = useDispatch();
+  const { status, items: product } = useSelector((state) => state.product);
+  const loading = !status || status === "loading" || status === "idle";
 
   useEffect(() => {
-    fetch("https://fakestoreapi.com/products/category/electronics")
-      .then((res) => res.json())
-      .then((data) => {
-        
-        setProduct(data);
-      });
-  }, []);
+    if (!status || status === "idle" || status === "error") {
+      dispatch(fetchProduct({}));
+    }
+  }, [dispatch, status]);
 
-    return(
-        <div className="bg-primary flex flex-col gap-[50px] ">
+  const ElectronicsProducts = product.filter((item) => item.category === "Electronics");
+
+  return (
+    <div className="bg-secondary flex flex-col pt-[50px] gap-[50px]">
+      <div className="text-white text-2xl text-center font-bold">Electronics Products</div>
 
       <div className="flex flex-wrap gap-[20px] justify-center">
-        {product.length > 0 &&
-          product.slice(0, 10).map((item, index) => (
-            <Item key={index} index={index+20} data={item} />
-          ))}
+        {loading ? (
+          [...Array(12).keys()].map((_, i) => <ItemSkeleton key={i} />)
+        ) : ElectronicsProducts.length > 0 ? (
+          ElectronicsProducts.slice(0, 100).map((item, index) => (
+            <Item
+              key={index}
+              index={index + 20}
+              data={item}
+              reference={item.productRef}
+              name={item.merchant?.name}
+            />
+          ))
+        ) : (
+          <div className="text-white">No Electronics Products Found</div>
+        )}
       </div>
 
-     <Footer/>
+      <Footer />
     </div>
-    )
+  );
 }
 
 export default Electronics;
