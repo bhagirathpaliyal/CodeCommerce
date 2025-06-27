@@ -18,15 +18,17 @@ const AddProducts = () => {
   const [price, setPrice] = useState("");
   const [image, setImage] = useState("");
   const [isChecked, setIsChecked] = useState(false);
+  const [category, setCategory] = useState("");
   const [errors, setErrors] = useState({
     name: "",
     price: "",
     image: "",
+    category: "",
   });
 
   useEffect(() => {
     if (user) {
-      dispatch(fetchProduct({userId: user.uid}));
+      dispatch(fetchProduct({ userId: user.uid }));
     }
   }, [user, dispatch]);
 
@@ -44,6 +46,10 @@ const AddProducts = () => {
     }
     if (!isChecked && !image) {
       newErrors.image = "Product image URL is required";
+      isValid = false;
+    }
+    if (!category) {
+      newErrors.category = "Product category is required";
       isValid = false;
     }
 
@@ -64,14 +70,15 @@ const AddProducts = () => {
         dispatch(
           addProduct({
             userId: user.uid,
-            item: { name, price, image: imageUrl },
+            item: { name, price, image: imageUrl ,category, },
           })
         ).then(() => dispatch(fetchProduct(user.uid)));
         setName("");
         setPrice("");
         setImage("");
         setIsChecked(false);
-        setErrors({ name: "", price: "", image: "" });
+       setCategory("")
+        setErrors({ name: "", price: "", image: "",category:"" });
       }
     }
   };
@@ -118,6 +125,23 @@ const AddProducts = () => {
             />
           </div>
 
+          <label htmlFor="category">Category</label>
+          <select
+            id="category"
+            className="border p-2 rounded-md"
+            value={category}
+            onChange={(e) => setCategory(e.target.value)}
+          >
+            <option value="">Select category</option>
+            <option value="Men">Men</option>
+            <option value="Women">Women</option>
+            <option value="Electronics">Electronics</option>
+            <option value="Jewellery">Jewellery</option>
+          </select>
+          {errors.category && (
+            <FormHelperText error>{errors.category}</FormHelperText>
+          )}
+
           {!isChecked && (
             <Input
               className="border rounded-md"
@@ -144,15 +168,9 @@ const AddProducts = () => {
       <div className="mt-8 flex flex-col items-center gap-5">
         <div className="text-lg font-bold">Your Products</div>
         <ul className="flex flex-wrap gap-[20px] justify-center">
-          {products.map((item, index) =>
-            (
-              <Item
-                key={index}
-                index={index + 20}
-                data={item}
-              />
-            )
-          )}
+          {products.map((item, index) => (
+            <Item key={index} index={index + 20} data={item} />
+          ))}
         </ul>
       </div>
     </div>
