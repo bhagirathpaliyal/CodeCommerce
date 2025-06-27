@@ -77,9 +77,7 @@ function Item(prop) {
         <h2 className="text-[12px] md:text-[15px] ">
           Merchant: <span className="font-medium">{merchant ? merchant.name : "Loading"}</span>
         </h2>
-        <h2 className="text-[12px] md:text-[15px] ">
-          category: <span className="font-medium">{prop.data?.category}</span>
-        </h2>
+      
 
         {!user?.isMerchant && !prop.isCart && (
           <Button  onClick={() => handleAction("addToCart")}>
